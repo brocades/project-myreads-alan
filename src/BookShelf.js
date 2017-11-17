@@ -1,16 +1,21 @@
 import React, { Component } from 'react'
-import Book, from './Book'
+import Book from './Book'
 
 class BookShelf extends Component {
-	const { books } = this.props
+
+	areEqualTitles(bookShelf, shelfTitle) {
+		return bookShelf.toUpperCase().replace(/\s+/g,'') === shelfTitle.toUpperCase().replace(/\s+/g,'')
+	}
 
 	render() {
+		const { title, books } = this.props
+		let filteredBooks = books.filter((book) => this.areEqualTitles(book.shelf, title))
 		return (
 			<div className="bookshelf">
-        <h2 className="bookshelf-title">Currently Reading</h2>
+        <h2 className="bookshelf-title">{title}</h2>
         <div className="bookshelf-books">
           <ol className="books-grid">
-            {books.map((book) => (
+            {filteredBooks.map((book) => (
             	<li key={book.id}>
             		<Book book={book}/>
             	</li>
@@ -22,4 +27,4 @@ class BookShelf extends Component {
 	}
 }
 
-export default BookShelf;
+export default BookShelf
