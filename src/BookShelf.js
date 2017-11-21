@@ -8,21 +8,40 @@ class BookShelf extends Component {
 	}
 
 	render() {
-		const { title, books } = this.props
-		let filteredBooks = books.filter((book) => this.areEqualTitles(book.shelf, title))
+		const { title, books, pageType } = this.props
+		let filteredBooks = books
+		if (title) {
+			filteredBooks = books.filter((book) => this.areEqualTitles(book.shelf, title))
+		}
 		return (
+			pageType !== "search" ? (
 			<div className="bookshelf">
         <h2 className="bookshelf-title">{title}</h2>
         <div className="bookshelf-books">
           <ol className="books-grid">
             {filteredBooks.map((book) => (
             	<li key={book.id}>
-            		<Book book={book}/>
+            		<Book onChangeShelf={this.props.onBookUpdate} book={book}/>
             	</li>
             ))}
           </ol>
         </div>
       </div>
+      )
+      :
+      ( 
+      	<div className="bookshelf">
+	        <div className="bookshelf-books">
+	          <ol className="books-grid">
+	            {filteredBooks.map((book) => (
+	            	<li key={book.id}>
+	            		<Book onChangeShelf={this.props.onBookUpdate} book={book}/>
+	            	</li>
+	            ))}
+	          </ol>
+	        </div>
+	      </div>
+      	)
 		)
 	}
 }
