@@ -24,7 +24,7 @@ class Book extends Component {
           <div className="book-shelf-changer">
             <select 
               id={id} 
-              defaultValue={shelf}
+              defaultValue={shelf ? shelf : "none"}
               onChange={() => this.changeShelf(id)}>
               <option value="none" disabled>Move to...</option>
               {this.state.options.map((option, index) => (

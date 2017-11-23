@@ -8,6 +8,7 @@ import BookShelf from './BookShelf'
 class BooksApp extends React.Component {
   state = {
     books: [],
+    searchedBooks: [],
     query: ''
   }
 
@@ -21,10 +22,14 @@ class BooksApp extends React.Component {
     this.setState({query: query.trim()})
   }
 
+  resetSearchResults = () => {
+    this.setState({searchedBooks: [], query: ''})
+  }
+
   searchBooks = (query) => {
     this.updateQuery(query)
-    BooksAPI.search(query).then((books) => {
-      this.setState({ books })
+    BooksAPI.search(query).then((searchedBooks) => {
+      this.setState({ searchedBooks })
     })
   }
 
@@ -39,48 +44,32 @@ class BooksApp extends React.Component {
   }
 
   render() {
-    const { books } = this.state
+    const { books, searchedBooks } = this.state
     return (
       <div className="app">
-        <Route exact path="/search" render={({history}) => (
-          <div className="list-books">
-            <div className="list-books-title">
-              <h1>MyReads</h1>
-            </div>
-              <div className="search-books">
-                <div className="search-books-bar">
-                  <Link 
-                    to="/"
-                    className="close-search"
-                    >Close</Link>
-                  <div className="search-books-input-wrapper">
-                    {/*
-                      NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                      You can find these search terms here:
-                      https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-                      However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                      you don't find a specific author or title. Every search is limited by search terms.
-                    */}
-                    {/*TO-DO use BookShelf search */}
-                    <input 
-                      type="text" 
-                      onChange={(event) => this.searchBooks(event.target.value)}
-                      placeholder="Search by Title or Author"/>
-                    <div className="list-books-content">
-                      <div>
-                        <BookShelf pageType="search" onBookUpdate={() => {this.changeBookShelf; history.push('/')}} books={books}/>
-                      </div>
-                    </div>
-                  </div>
+          <Route exact path="/search" render={() => (
+            <div className="search-books">
+              <div className="search-books-bar">
+                <Link 
+                  to="/"
+                  className="close-search"
+                  onClick={this.resetSearchResults}
+                  >Close</Link>
+                <div className="search-books-input-wrapper">
+                  <input 
+                    type="text" 
+                    onChange={(event) => this.searchBooks(event.target.value)}
+                    placeholder="Search by Title or Author"/>
                 </div>
-                <div className="search-books-results">
-                  <ol className="books-grid"></ol>
+              </div>              
+              <div className="search-books-results">
+                <div>
+                  <BookShelf pageType="search" onBookUpdate={this.changeBookShelf} books={searchedBooks}/>
                 </div>
-              </div>
-          </div>
+              </div>                  
+            </div>                     
           )}/>
-        <Route exact path="/" render={() => (
+          <Route exact path="/" render={() => (
           <div className="list-books">
             <div className="list-books-title">
               <h1>MyReads</h1>
@@ -97,9 +86,9 @@ class BooksApp extends React.Component {
                 to="/search"
                 >Add a book</Link>
             </div>
-          </div>
+            </div>
           )}/>        
-      </div>
+        </div>      
     )
   }
 }
