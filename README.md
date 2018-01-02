@@ -10,7 +10,9 @@ It respects the _Source of Truth_ concept by keeping the necessary state inside 
 
 ## Running the application
 
-In order to run the application type `npm start` from the root folder of the application.
+
+In order to run the application you will need to install all its dependencies first by running the command `npm install` while in the root folder of the application
+and then, after all dependencies are installed, just type `npm start`.
 
 ### `BooksApp`
 
