@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { If, Then, Else } from 'react-if'
 
 class Book extends Component {
 
@@ -16,39 +17,46 @@ class Book extends Component {
   }
 	render() {
 		const { id, title, authors, imageLinks, shelf } = this.props.book
-    //if (this.props.onChangeShelf) console.log("the function exists")
 		return (
 			<div className="book">
         <div className="book-top">
           <div className="book-cover" style={{backgroundImage: `url("${imageLinks.smallThumbnail}")` }}></div>
           <div className="book-shelf-changer">
-            <select 
-              id={id} 
+            <select
+              id={id}
               defaultValue={shelf ? shelf : "none"}
               onChange={() => this.changeShelf(id)}>
               <option value="none" disabled>Move to...</option>
               {this.state.options.map((option, index) => (
-                option.value !== shelf ? 
-                (<option 
-                  key={index} 
+                <If condition={option.value !== shelf}>
+                <Then>
+                  <option
+                  key={index}
                   value={option.value}
-                  >{option.text}</option>) 
-                : 
-                (<option
-                  key={index} 
+                  >{option.text}</option>
+                </Then>
+                <Else>
+                  <option
+                  key={index}
                   value={option.value}
-                  >✓ {option.text}</option>)
+                  >✓ {option.text}</option>
+                </Else>
+                </If>
               ))}
-              
             </select>
           </div>
         </div>
         <div className="book-title">{title}</div>
-        { authors instanceof Array ? 
-            authors.map((author, index) => (<div key={index} className="book-authors">{author}</div>))
-            :
+        <If condition={authors instanceof Array}>
+          <Then>
+            <div>
+              {() => authors.map((author, index) => <div key={index} className="book-authors">{author}</div>)}
+            </div>
+          </Then>
+          <Else>
             <div key={authors} className="book-authors">{authors}</div>
-        }             
+          </Else>
+        </If>
       </div>
 		)
 	}

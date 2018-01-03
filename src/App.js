@@ -35,11 +35,21 @@ class BooksApp extends React.Component {
         console.log(`>>> SearchedBooks: ${searchedBooks}`)
         console.log(`>>> searchedBooks.error: ${searchedBooks.error}`)
         if (!searchedBooks.hasOwnProperty("error")) {
-          let results = searchedBooks.filter((book) => !book.hasOwnProperty("shelf"))
+          //let results = searchedBooks.filter((book) => !book.hasOwnProperty("shelf"))
+          //results = searchedBooks.map((book) => {})
+          let results = []
+          for (let book of searchedBooks) {
+            let sameBook = this.state.books.filter((b) => b.title === book.title)
+            if (sameBook[0] instanceof Object) {
+              book.shelf = sameBook[0].shelf
+            }
+            results.push(book)
+          }
           this.setState({ searchedBooks: results })          
         }
       })
       .catch((reason) => {
+        this.setState({ searchedBooks: [] })
         console.log(`Error caught ${reason}.`)
       })
     }
